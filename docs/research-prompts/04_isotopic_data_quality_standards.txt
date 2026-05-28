@@ -1,0 +1,12 @@
+Project: Isotopic-Data-Standardisation-Tool
+Source: open_heritage_software_project_scopes.md — Project 14
+======================================================================
+
+CONTEXT:
+I am building an open-source isotopic and paleoecological data standardisation tool to help researchers prepare legacy datasets for submission to repositories like Neotoma and IsoArcH. I need research:
+
+──────────────────────────────────────────────────────────────────────
+
+RESEARCH PROMPT 4:
+
+**Data quality standards for isotopic data**: What are the recommended reporting standards for stable isotope data in archaeology and paleoecology? Cover the recommendations of the IsoMemo Data Reporting Standards paper and any other published guidelines for δ13C, δ15N, δ18O, and 87Sr/86Sr data.

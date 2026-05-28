@@ -1,0 +1,132 @@
+I am building IsoMap, an open-source desktop data standardisation and submission tool for palaeontologists, archaeologists, archaeozoologists, and paleoecologists. The tool helps researchers wrangle legacy isotopic and paleoecological datasets into submission-ready formats for centralised repositories (Neotoma, IsoArcH, IsoMemo, PANGAEA, and others). The tech stack is Python with a Tauri + React or PySide6 GUI, Pandas for data manipulation, and JSON Schema for repository schema definitions.
+I need comprehensive research across the following areas. For each, provide specific technical details, endpoint URLs, field names, code-level examples where relevant, and flag anything that is underdocumented or likely to cause implementation problems.
+
+
+1. Neotoma Paleoecology Database — Submission Workflow
+
+What is the complete end-to-end submission workflow for Neotoma v2? Map every step from initial data preparation through steward review to public availability.
+What are the required and optional fields for each major dataset type: pollen, vertebrate fauna, diatom, ostracode, stable isotope, geochronology, and geochemistry? Provide field-level detail including data types, controlled vocabulary lists, and cardinality.
+Does Neotoma have a programmatic submission API, or does all submission go through the Excel uploader? If the API exists: what are the authentication mechanisms (OAuth, API key), the base URL, the endpoint paths, the request/response JSON schemas, and the rate limits?
+What validation checks does Neotoma apply server-side? Are these documented anywhere, and can they be replicated locally before submission to reduce rejection rates?
+How does Neotoma handle dataset versioning and updates — can you modify a published dataset, and what is the process?
+What is the Neotoma stewardship model? Who reviews submissions, what are the common rejection reasons, and how long does review take?
+Are there bulk or batch submission mechanisms, or is submission always dataset-by-dataset?
+What are the data structures for chronologies and age models in Neotoma? How are radiocarbon dates, calibrated ages, and stratigraphic assignments stored and linked to samples?
+
+
+2. IsoArcH and IsoMemo — Submission Requirements
+
+What is the full data schema for IsoArcH submissions? Provide field-level detail for all required and optional fields, including: isotope values (δ13C, δ15N, δ18O, δ34S, 87Sr/86Sr), sample metadata (element, tissue, skeletal element, side), site metadata (name, coordinates, period, culture), and associated contextual data (burial type, sex, age-at-death).
+What controlled vocabularies does IsoArcH enforce? Cover: sample material type, tissue/element type, isotope system, and dating method. Where are these vocabulary lists published or accessible?
+Does IsoArcH have a REST or GraphQL API for programmatic data submission or querying? If so, provide endpoint documentation. If not, what is the upload mechanism (templated Excel/CSV, web form)?
+What is the relationship between IsoArcH and the IsoMemo network? Does data submitted to IsoArcH automatically appear in IsoMemo, or is there a separate submission pathway?
+What are the IsoMemo Data Reporting Standards? Summarise the published guidelines for reporting δ13C, δ15N, δ18O, δ34S, and 87Sr/86Sr data, including required uncertainty fields, calibration reporting, and instrument/methodology metadata.
+How does IsoMemo handle data from different regional or thematic databases within its network (CERN, FRUIT, MedIsoPal, etc.)? Are there cross-database schema differences that a standardisation tool must account for?
+What are the licensing and access control options when submitting to IsoArcH — can researchers embargo data pre-publication?
+
+
+3. PANGAEA and Other Major Repositories
+
+What is the PANGAEA data submission format? What are the required metadata fields, the tabular data structure conventions, and the accepted file formats? Is there a submission API or is it form/email based?
+How does PANGAEA's schema relate to Neotoma and IsoArcH schemas — are there overlapping fields that can be mapped once and reused, or are they structurally incompatible?
+What are the submission requirements and data formats for:
+
+NOAA Paleoclimatology (particularly for speleothem, coral, ice core, and pollen datasets)
+Copernicus Climate Change Service / C3S paleoclimate data
+Strabospot (field geology and stratigraphy data)
+Open Context (archaeological data publishing)
+tDAR (the Digital Archaeological Record)
+
+
+What interoperability standards exist between these repositories — is there a shared metadata crosswalk (e.g., Dublin Core, DataCite, EML)?
+Are any of these repositories adopting or planning to adopt Linked Open Data / RDF for data exchange?
+
+
+4. Taxonomic Authority APIs — Technical Detail
+
+GBIF Species Match API: What is the exact endpoint URL? What request parameters does it accept (name, kingdom, rank, strict, verbose)? What does the response JSON look like, including confidence scores, match types (EXACT, FUZZY, HIGHERRANK, NONE), and synonymy chains? What are the rate limits and do they require an API key?
+ITIS Solr API: What are the available endpoints for taxon name search? How do you query by scientific name, retrieve accepted name from synonym, and get the full taxonomic hierarchy? What response format does it use?
+WoRMS (World Register of Marine Species): What are the REST API endpoints for marine taxon matching? How is this relevant to marine paleoecological datasets (foraminifera, diatoms, ostracodes)?
+Neotoma's own taxon list: Does Neotoma expose its internal taxon authority as a queryable API? How do researchers resolve taxon names against the Neotoma-specific list (which is not identical to GBIF or ITIS)?
+Fishbase and SeaLifeBase: Do they have APIs usable for archaeozoological fish bone identification?
+Paleobiology Database (PBDB): Does the PBDB taxa API provide useful name resolution for fossil taxa not covered by GBIF/ITIS?
+For offline operation: what is the best approach to building a bundled local snapshot of taxonomic authority data? What are the download mechanisms (GBIF backbone download, ITIS full download), approximate data sizes, and recommended update frequencies?
+How should a tool handle taxonomic synonymy chains — where taxon A is a synonym of B, which is a synonym of the currently accepted name C? How do different authorities handle this differently, and how should conflicts be surfaced to the user?
+
+
+5. Chronology, Dating, and Geochronology Standardisation
+
+What are the standard representations for radiocarbon dates in paleoscience databases — what fields are required (conventional 14C age, ±1σ uncertainty, lab code, material dated, pretreatment method, calibration curve, calibrated age range)?
+What are the major radiocarbon calibration curves (IntCal20, Marine20, SHCal20) and how do calibrated age ranges get reported (median, 1σ, 2σ, probability distributions)?
+Should the tool integrate a calibration library (e.g., Bchron, oxcAAR via subprocess, or a Python port of IntCal)? What are the options here?
+How do different repositories store stratigraphic age assignments (period names, epoch names, NALMA, MIS stages)? Are there controlled vocabulary lists for these?
+How should the tool handle calendar year conventions: BP vs. cal BP vs. cal BCE/CE vs. ka vs. Ma? What are the formal definitions and which anchors do each use (e.g., BP = years before 1950)?
+What is the standard for reporting OSL/TL, U-series, K-Ar, Ar-Ar, fission track, and amino acid racemisation dates in paleoecological repositories?
+
+
+6. Coordinate Reference Systems and Spatial Data
+
+What CRS and coordinate formats appear most commonly in legacy paleoecological datasets (decimal degrees WGS84, DMS, UTM, OSGB, local grid systems)?
+What is the recommended approach using pyproj for robust CRS detection and transformation, and what are the failure modes (ambiguous datum, missing EPSG code)?
+How should the tool handle imprecise locality data (e.g., a site known only to the nearest town, or coordinates given as a grid square)? What precision metadata fields do Neotoma and IsoArcH support?
+Are there bounding box or point-in-polygon validation checks that should be applied (e.g., flagging coordinates that fall in the ocean for a terrestrial site type)?
+What gazetteer services (GeoNames, Getty Thesaurus of Geographic Names) could be used to validate or enrich site locality data?
+
+
+7. Isotopic Data Quality Standards and Validation Rules
+
+What are the internationally accepted value ranges for each major isotope system in archaeological and paleoecological contexts? (e.g., expected δ13C range for C3 plants, human bone collagen, marine carbonates; δ15N ranges; δ18O ranges by material)
+What inter-laboratory standards and reference materials are used for δ13C, δ15N, δ18O, and 87Sr/86Sr? How should these be reported in a submission dataset?
+What are the collagen quality indicators for bone isotope data (C:N ratio, %C, %N, %collagen yield) and what thresholds indicate a sample should be flagged as potentially unreliable?
+What are the reporting requirements for carbonate diagenesis screening (XRD crystallinity index, FTIR splitting factor, Mn/Fe ratios)?
+What metadata fields are required to report instrument and analytical conditions (mass spectrometer make/model, analytical precision as 1σ of in-house standard, number of replicate analyses)?
+Are there any published data validation rule sets for isotopic data (analogous to Neotoma's internal checks) in IsoArcH, IsoMemo, or academic guidelines that could be codified into the tool's validation engine?
+
+
+8. Column Name Matching and Schema Mapping — ML/NLP Approaches
+
+What are the state-of-the-art approaches for automated schema matching in data integration research? Cover both classical approaches (string similarity, token overlap, data type inference, value distribution matching) and modern approaches (transformer-based column name embeddings, few-shot LLM prompting).
+Are there existing open-source schema matching or data wrangling tools that could be repurposed or integrated (e.g., Valentine schema matching library, Magellan, D3M's data augmentation tools, Google's JOSIE, or the NIST data integration challenge solutions)?
+How does embedding-based semantic matching work for column names — what pre-trained models work well for scientific domain column names (where general-purpose embeddings may underperform on terms like "δ13C_VPDB" or "14C_BP_uncal")?
+What is the best strategy for a fallback matching pipeline: (1) exact match → (2) normalised string match → (3) fuzzy string match → (4) embedding similarity → (5) data pattern/value distribution matching → (6) manual? What thresholds and confidence scores should trigger each level?
+How should the tool learn from user corrections — if a user manually overrides a bad suggestion, how should that correction be stored and applied to future datasets? What is the minimal viable approach (a local JSON lookup table) vs. a more sophisticated approach (fine-tuning)?
+What are the data patterns that uniquely identify isotopic and paleoecological column types (e.g., values clustering around −25 to −10‰ suggest δ13C; values between 0 and 20‰ suggest δ15N; 4-digit numbers between 1000 and 50000 suggest uncalibrated 14C BP)?
+
+
+9. Validation Engine Design
+
+What validation rule categories should the tool implement? Cover: (a) schema completeness (required fields present), (b) data type correctness, (c) controlled vocabulary compliance, (d) cross-field logical consistency (e.g., calibrated age must be younger than 50,000 BP for 14C), (e) out-of-range scientific values, (f) spatial validity, (g) taxon resolution status, (h) duplicate detection.
+What are the best Python libraries for data validation in a scientific data context — compare Pandera, Great Expectations, Pydantic, and Cerberus for this use case. Which is most appropriate for generating human-readable validation reports?
+How should the tool handle row-level vs. dataset-level validation issues? What is the UX pattern for surfacing hundreds of individual row errors without overwhelming the user?
+What severity levels should be defined (blocking error vs. warning vs. informational note), and what criteria determine severity?
+
+
+10. Transformation Audit Log and Reproducibility
+
+What provenance metadata standards exist for data transformation workflows in science? Cover W3C PROV-O, RO-Crate, and any domain-specific standards in use by paleoscience repositories.
+How should the transformation log JSON be structured to be both human-readable and machine-executable — i.e., so that a collaborator could replay the transformation on a new version of the source data?
+Should the tool generate a methods section text snippet (in prose) describing the standardisation steps, suitable for inclusion in a data paper or supplementary methods? What would this look like?
+Are there data paper templates (e.g., for journals like Earth System Science Data, Journal of Open Archaeology Data, or Quaternary International) that describe what transformation documentation a submission requires?
+
+
+11. Offline Capability and Deployment
+
+What is the recommended strategy for bundling authority data (taxonomic snapshots, schema files, calibration curves) for fully offline operation?
+How large are the GBIF backbone taxonomy download, ITIS full database download, and WoRMS snapshot, and what storage and indexing approach (SQLite, DuckDB, flat file) is appropriate for fast local lookup?
+What is the recommended schema update mechanism — how should the app check for updated repository schemas (Neotoma, IsoArcH) on launch without requiring a full app update? Consider a GitHub-hosted schema registry.
+What are the packaging and distribution considerations for a Python-based scientific desktop app across Windows, macOS, and Linux (PyInstaller, cx_Freeze, conda-pack, Tauri sidecar)?
+
+
+12. Unaddressed or Emerging Features Worth Evaluating
+
+Data paper generation: Can the tool auto-generate a draft data descriptor manuscript (for ESSD, JOAD, or Scientific Data) from the dataset metadata and transformation log?
+ORCID integration: Should the tool capture and embed ORCID identifiers for dataset contributors and link them to submission metadata?
+DOI minting: Do any target repositories (PANGAEA, Neotoma) provide DOIs on publication, and should the tool surface and store these?
+Embargo and access control: What options exist for time-limited data embargoes across different repositories, and how should the tool communicate these options to users?
+Dataset deduplication across repositories: If a researcher submits the same dataset to both PANGAEA and Neotoma, what cross-referencing mechanisms exist, and should the tool help maintain these links?
+Unit normalisation: Legacy datasets use heterogeneous units (ppm vs. mg/kg, ‰ VPDB vs. ‰ VSMOW). What is the scope of unit conversion required, and are there libraries (Pint, uncertainties) that should be used?
+Uncertainty propagation: If a researcher's data lacks uncertainty values (missing ±σ), what is the scientifically appropriate way to flag or impute these, and what do repositories require?
+Image and spectral data: Some isotopic datasets include SEM images, FTIR spectra, or XRD patterns as supplementary evidence. Do target repositories accept these, and how should they be linked to tabular records?
+Multi-site and time-series datasets: What are the structural differences between a single-site assemblage submission and a multi-site comparative study, and does the tool need to handle dataset splitting/merging?
+Collaborative and multi-user workflows: Should the tool support shared project folders or cloud sync (e.g., via a shared transformation log on GitHub or OSF) for multi-researcher teams?
+

@@ -1,0 +1,12 @@
+Project: Isotopic-Data-Standardisation-Tool
+Source: open_heritage_software_project_scopes.md — Project 14
+======================================================================
+
+CONTEXT:
+I am building an open-source isotopic and paleoecological data standardisation tool to help researchers prepare legacy datasets for submission to repositories like Neotoma and IsoArcH. I need research:
+
+──────────────────────────────────────────────────────────────────────
+
+RESEARCH PROMPT 5:
+
+**Column name matching algorithms**: What ML or NLP approaches work best for automatically matching column names in messy research spreadsheets to standardised schema fields? Are there existing open-source tools for schema mapping in data integration that could be repurposed?

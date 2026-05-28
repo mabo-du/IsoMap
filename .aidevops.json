@@ -1,0 +1,114 @@
+{
+  "version": "3.20.4",
+  "initialized": "2026-05-28T20:46:37Z",
+  "init_scope": "minimal",
+  "agent_source": false,
+  "features": {
+    "planning": true,
+    "git_workflow": true,
+    "code_quality": true,
+    "time_tracking": true,
+    "database": true,
+    "beads": true,
+    "sops": false,
+    "security": true
+  },
+  "time_tracking": {
+    "enabled": true,
+    "prompt_on_commit": true,
+    "auto_record_branch_start": true
+  },
+  "database": {
+    "enabled": true,
+    "schema_path": "schemas",
+    "migrations_path": "migrations",
+    "seeds_path": "seeds",
+    "auto_generate_migration": true
+  },
+  "beads": {
+    "enabled": true,
+    "sync_on_commit": false,
+    "auto_ready_check": true
+  },
+  "sops": {
+    "enabled": false,
+    "backend": "age",
+    "patterns": [
+      "*.secret.yaml",
+      "*.secret.json",
+      "configs/*.enc.json",
+      "configs/*.enc.yaml"
+    ]
+  },
+  "plugins": [],
+  "security_posture": {
+    "status": "warning",
+    "last_audit": "2026-05-28T20:46:50Z",
+    "critical": 0,
+    "warnings": 5,
+    "info": 6,
+    "passed": 1,
+    "findings": [
+      {
+        "severity": "info",
+        "category": "workflows",
+        "message": "No .github/workflows/ directory"
+      },
+      {
+        "severity": "info",
+        "category": "branch_protection",
+        "message": "No GitHub remote"
+      },
+      {
+        "severity": "warning",
+        "category": "review_bot_gate",
+        "message": "No review-bot-gate.yml workflow"
+      },
+      {
+        "severity": "warning",
+        "category": "linked_issue_gate",
+        "message": "linked-issue-check.yml missing"
+      },
+      {
+        "severity": "info",
+        "category": "dependencies",
+        "message": "No dependency manifests found"
+      },
+      {
+        "severity": "info",
+        "category": "collaborators",
+        "message": "No GitHub remote"
+      },
+      {
+        "severity": "warning",
+        "category": "repo_security",
+        "message": "Missing SECURITY.md"
+      },
+      {
+        "severity": "warning",
+        "category": "repo_security",
+        "message": "No .gitignore"
+      },
+      {
+        "severity": "pass",
+        "category": "repo_security",
+        "message": "No secret files tracked"
+      },
+      {
+        "severity": "warning",
+        "category": "repo_security",
+        "message": "No dependency update automation"
+      },
+      {
+        "severity": "info",
+        "category": "sync_pat",
+        "message": "No GitHub remote"
+      },
+      {
+        "severity": "info",
+        "category": "sync_pat",
+        "message": "No GitHub remote (cross-account check)"
+      }
+    ]
+  }
+}

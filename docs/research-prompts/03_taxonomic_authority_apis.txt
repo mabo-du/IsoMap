@@ -1,0 +1,12 @@
+Project: Isotopic-Data-Standardisation-Tool
+Source: open_heritage_software_project_scopes.md — Project 14
+======================================================================
+
+CONTEXT:
+I am building an open-source isotopic and paleoecological data standardisation tool to help researchers prepare legacy datasets for submission to repositories like Neotoma and IsoArcH. I need research:
+
+──────────────────────────────────────────────────────────────────────
+
+RESEARCH PROMPT 3:
+
+**Taxonomic authority APIs**: What are the GBIF Species Match API and ITIS Solr API? What are their endpoints, request formats, and response structures for taxon name matching? What other taxonomic authority services are used in paleoecological databases (WoRMS for marine, Fishbase, etc.)?

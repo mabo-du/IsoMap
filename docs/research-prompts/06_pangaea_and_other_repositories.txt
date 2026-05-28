@@ -1,0 +1,12 @@
+Project: Isotopic-Data-Standardisation-Tool
+Source: open_heritage_software_project_scopes.md — Project 14
+======================================================================
+
+CONTEXT:
+I am building an open-source isotopic and paleoecological data standardisation tool to help researchers prepare legacy datasets for submission to repositories like Neotoma and IsoArcH. I need research:
+
+──────────────────────────────────────────────────────────────────────
+
+RESEARCH PROMPT 6:
+
+**PANGAEA and other repositories**: What other major paleoecological data repositories exist (PANGAEA, NOAA Paleoclimatology, Copernicus)? What are their submission formats and how do they relate to Neotoma's format?

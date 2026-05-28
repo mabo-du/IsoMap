@@ -1,0 +1,13 @@
+Project: Isotopic-Data-Standardisation-Tool
+Source: Supplementary research prompt (generated)
+======================================================================
+
+CONTEXT:
+Supplementary research prompt covering practical aspects not addressed
+in the core domain research prompts from the scoping document.
+
+──────────────────────────────────────────────────────────────────────
+
+SUPPLEMENTARY RESEARCH PROMPT:
+
+**Reproducible data transformation for FAIR compliance**: What tools and standards exist for recording data transformation steps as reproducible pipelines? Compare: Frictionless Data packages, W3C PROV ontology, SDMX, and custom JSON audit logs. How do existing data wrangling tools (OpenRefine, Trifacta, pandas-profiling) record transformation provenance? What level of transformation documentation is expected for FAIR-compliant dataset submissions to repositories like Neotoma and PANGAEA?

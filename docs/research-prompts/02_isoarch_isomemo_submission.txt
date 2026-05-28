@@ -1,0 +1,12 @@
+Project: Isotopic-Data-Standardisation-Tool
+Source: open_heritage_software_project_scopes.md — Project 14
+======================================================================
+
+CONTEXT:
+I am building an open-source isotopic and paleoecological data standardisation tool to help researchers prepare legacy datasets for submission to repositories like Neotoma and IsoArcH. I need research:
+
+──────────────────────────────────────────────────────────────────────
+
+RESEARCH PROMPT 2:
+
+**IsoArcH and IsoMemo submission**: What are the data submission requirements for IsoArcH and the broader IsoMemo network? What fields are required for isotopic datasets? What controlled vocabularies are used for sample type, tissue type, and element measured? Are there API endpoints for submission?
