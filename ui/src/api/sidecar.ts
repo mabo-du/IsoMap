@@ -124,6 +124,24 @@ export const exportDataset = async (
   }
 };
 
+export const normaliseChronology = async (
+  filePath: string,
+  mappings: Record<string, [string, string]>,
+  sheetName?: string
+): Promise<Record<string, any>[]> => {
+  try {
+    const result: { preview: Record<string, any>[] } = await invoke("normalise_chronology_cmd", {
+      filePath,
+      mappings,
+      sheetName
+    });
+    return result.preview;
+  } catch (error) {
+    console.error("Failed to normalise chronology", error);
+    throw error;
+  }
+};
+
 
 
 

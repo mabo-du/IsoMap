@@ -13,6 +13,7 @@ from isomap.core.mapper import ColumnMapper
 from isomap.core.spatial import to_geodataframe, get_bounding_box
 from isomap.core.validator import ValidationEngine
 from isomap.core.exporter import ExportEngine
+from isomap.core.chronology import process_chronology_dataframe
 
 # Global instances
 mapper = ColumnMapper()
@@ -86,6 +87,16 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
                 raise ValueError(f"Unknown format: {fmt}")
                 
             result = {"success": True, "output_path": out_path}
+        elif method == "normalise_chronology":
+            df = read_dataset(params["file_path"], params.get("sheet_name"))
+            mappings = params.get("mappings", {}) # Dict[str, Tuple[str, str]]
+            norm_df = process_chronology_dataframe(df, mappings)
+            
+            # For preview purposes, return the first few rows of the normalised columns
+            target_cols = list(mappings.keys())
+            preview_df = norm_df[target_cols].head(10)
+            preview = preview_df.replace({float("nan"): None}).to_dict(orient="records")
+            result = {"preview": preview}
         else:
             raise ValueError(f"Unknown method: {method}")
 

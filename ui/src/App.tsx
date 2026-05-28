@@ -2,12 +2,13 @@ import { useState } from "react";
 import { ImportWizard } from "./components/ImportWizard/ImportWizard";
 import { ColumnMapper } from "./components/ColumnMapper/ColumnMapper";
 import { MapPreview } from "./components/MapPreview/MapPreview";
+import { ChronologyReview } from "./components/ChronologyReview/ChronologyReview";
 import { ValidationReport } from "./components/ValidationReport/ValidationReport";
 import { ExportPanel } from "./components/ExportPanel/ExportPanel";
 import "./App.css";
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'import' | 'map' | 'spatial' | 'validate' | 'export'>('import');
+  const [activeTab, setActiveTab] = useState<'import' | 'map' | 'chronology' | 'spatial' | 'validate' | 'export'>('import');
 
   return (
     <main className="container">
@@ -26,6 +27,12 @@ function App() {
           style={{ marginRight: '1rem', fontWeight: activeTab === 'map' ? 'bold' : 'normal' }}
         >
           2. Column Mapping
+        </button>
+        <button 
+          onClick={() => setActiveTab('chronology')}
+          style={{ marginRight: '1rem', fontWeight: activeTab === 'chronology' ? 'bold' : 'normal' }}
+        >
+          2.5. Chronology
         </button>
         <button 
           onClick={() => setActiveTab('spatial')}
@@ -48,10 +55,13 @@ function App() {
       </div>
 
       {activeTab === 'import' && <ImportWizard />}
-      {activeTab === 'map' && (
-        <ColumnMapper 
-          filePath="tests/test_data/legacy_data.csv" 
-          schemaName="neotoma" 
+      {activeTab === 'map' && <ColumnMapper />}
+      {activeTab === 'chronology' && (
+        <ChronologyReview
+          filePath="tests/test_data/legacy_data.csv"
+          mappings={{
+            "Age": ["age", "14C_BP"]
+          }}
         />
       )}
       {activeTab === 'spatial' && (
