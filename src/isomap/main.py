@@ -8,6 +8,10 @@ import traceback
 from typing import Dict, Any
 from isomap.core.importer import read_dataset, get_sheet_names
 from isomap.matching.distribution import infer_column_types
+from isomap.core.mapper import ColumnMapper
+
+# Global instances
+mapper = ColumnMapper()
 
 def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
     method = request.get("method")
@@ -37,6 +41,13 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
                 "inferred_types": inferred_types,
                 "total_rows": len(df)
             }
+        elif method == "map_columns":
+            df = read_dataset(params["file_path"], params.get("sheet_name"))
+            mappings = mapper.map_columns(df, params["schema_name"])
+            result = {"mappings": mappings}
+        elif method == "save_override":
+            mapper.save_override(params["source_column"], params["target_field"], params["schema_name"])
+            result = {"success": True}
         else:
             raise ValueError(f"Unknown method: {method}")
 
