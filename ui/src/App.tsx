@@ -3,10 +3,11 @@ import { ImportWizard } from "./components/ImportWizard/ImportWizard";
 import { ColumnMapper } from "./components/ColumnMapper/ColumnMapper";
 import { MapPreview } from "./components/MapPreview/MapPreview";
 import { ValidationReport } from "./components/ValidationReport/ValidationReport";
+import { ExportPanel } from "./components/ExportPanel/ExportPanel";
 import "./App.css";
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'import' | 'map' | 'spatial' | 'validate'>('import');
+  const [activeTab, setActiveTab] = useState<'import' | 'map' | 'spatial' | 'validate' | 'export'>('import');
 
   return (
     <main className="container">
@@ -34,9 +35,15 @@ function App() {
         </button>
         <button 
           onClick={() => setActiveTab('validate')}
-          style={{ fontWeight: activeTab === 'validate' ? 'bold' : 'normal' }}
+          style={{ marginRight: '1rem', fontWeight: activeTab === 'validate' ? 'bold' : 'normal' }}
         >
           4. Validation
+        </button>
+        <button 
+          onClick={() => setActiveTab('export')}
+          style={{ fontWeight: activeTab === 'export' ? 'bold' : 'normal' }}
+        >
+          5. Export
         </button>
       </div>
 
@@ -61,6 +68,19 @@ function App() {
           appliedMappings={{
             "SiteName": "site",
             "Latitude": "lat",
+            "Longitude": "lon",
+            "Age": "age"
+          }}
+        />
+      )}
+      {activeTab === 'export' && (
+        <ExportPanel
+          filePath="tests/test_data/legacy_data.csv"
+          schemaName="neotoma"
+          appliedMappings={{
+            "SiteName": "site",
+            "Latitude": "lat",
+            "Longitude": "lon",
             "Age": "age"
           }}
         />

@@ -100,5 +100,30 @@ export const validateDataset = async (filePath: string, schemaName: string, appl
   }
 };
 
+export const exportDataset = async (
+  filePath: string, 
+  schemaName: string, 
+  appliedMappings: Record<string, string>, 
+  format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json',
+  outputPath: string,
+  sheetName?: string
+): Promise<string> => {
+  try {
+    const result: { success: boolean, output_path: string } = await invoke("export_dataset_cmd", { 
+      filePath, 
+      schemaName, 
+      appliedMappings, 
+      format, 
+      outputPath,
+      sheetName 
+    });
+    return result.output_path;
+  } catch (error) {
+    console.error("Failed to export dataset", error);
+    throw error;
+  }
+};
+
+
 
 

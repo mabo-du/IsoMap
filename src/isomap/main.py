@@ -12,10 +12,12 @@ from isomap.matching.distribution import infer_column_types
 from isomap.core.mapper import ColumnMapper
 from isomap.core.spatial import to_geodataframe, get_bounding_box
 from isomap.core.validator import ValidationEngine
+from isomap.core.exporter import ExportEngine
 
 # Global instances
 mapper = ColumnMapper()
 validator = ValidationEngine()
+exporter = ExportEngine()
 
 def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
     method = request.get("method")
@@ -65,6 +67,25 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
             df = read_dataset(params["file_path"], params.get("sheet_name"))
             report = validator.validate(df, params["schema_name"], params["applied_mappings"])
             result = {"report": report}
+        elif method == "export_dataset":
+            df = read_dataset(params["file_path"], params.get("sheet_name"))
+            fmt = params.get("format", "csv")
+            out_path = params["output_path"]
+            mappings = params["applied_mappings"]
+            
+            if fmt == "csv":
+                exporter.export_csv(df, out_path, mappings)
+            elif fmt == "xlsx":
+                exporter.export_excel(df, out_path, mappings)
+            elif fmt == "geojson":
+                # Assuming Latitude/Longitude are the exact target fields in the schema
+                exporter.export_geojson(df, out_path, mappings, lat_field="Latitude", lon_field="Longitude")
+            elif fmt == "isoarch_json":
+                exporter.export_isoarch_json(df, out_path, mappings)
+            else:
+                raise ValueError(f"Unknown format: {fmt}")
+                
+            result = {"success": True, "output_path": out_path}
         else:
             raise ValueError(f"Unknown method: {method}")
 
