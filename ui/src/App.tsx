@@ -55,7 +55,12 @@ function App() {
       </div>
 
       {activeTab === 'import' && <ImportWizard />}
-      {activeTab === 'map' && <ColumnMapper />}
+      {activeTab === 'map' && (
+        <ColumnMapper 
+          filePath="tests/test_data/legacy_data.csv" 
+          schemaName="neotoma" 
+        />
+      )}
       {activeTab === 'chronology' && (
         <ChronologyReview
           filePath="tests/test_data/legacy_data.csv"
