@@ -57,3 +57,24 @@ export const saveOverride = async (sourceColumn: string, targetField: string, sc
   }
 };
 
+export interface SpatialPreview {
+  geojson: any;
+  bbox: {
+    min_lon: number;
+    min_lat: number;
+    max_lon: number;
+    max_lat: number;
+  } | null;
+}
+
+export const getSpatialPreview = async (filePath: string, latCol: string, lonCol: string, sheetName?: string): Promise<SpatialPreview> => {
+  try {
+    const result: SpatialPreview = await invoke("get_spatial_preview_cmd", { filePath, latCol, lonCol, sheetName });
+    return result;
+  } catch (error) {
+    console.error("Failed to get spatial preview", error);
+    throw error;
+  }
+};
+
+

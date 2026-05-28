@@ -6,9 +6,11 @@ import sys
 import json
 import traceback
 from typing import Dict, Any
+import json as json_lib
 from isomap.core.importer import read_dataset, get_sheet_names
 from isomap.matching.distribution import infer_column_types
 from isomap.core.mapper import ColumnMapper
+from isomap.core.spatial import to_geodataframe, get_bounding_box
 
 # Global instances
 mapper = ColumnMapper()
@@ -48,6 +50,15 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
         elif method == "save_override":
             mapper.save_override(params["source_column"], params["target_field"], params["schema_name"])
             result = {"success": True}
+        elif method == "get_spatial_preview":
+            df = read_dataset(params["file_path"], params.get("sheet_name"))
+            gdf = to_geodataframe(df, params["lat_col"], params["lon_col"])
+            geojson = gdf.to_json()
+            bbox = get_bounding_box(gdf)
+            result = {
+                "geojson": json_lib.loads(geojson),
+                "bbox": bbox
+            }
         else:
             raise ValueError(f"Unknown method: {method}")
 
