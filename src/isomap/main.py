@@ -11,9 +11,11 @@ from isomap.core.importer import read_dataset, get_sheet_names
 from isomap.matching.distribution import infer_column_types
 from isomap.core.mapper import ColumnMapper
 from isomap.core.spatial import to_geodataframe, get_bounding_box
+from isomap.core.validator import ValidationEngine
 
 # Global instances
 mapper = ColumnMapper()
+validator = ValidationEngine()
 
 def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
     method = request.get("method")
@@ -59,6 +61,10 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
                 "geojson": json_lib.loads(geojson),
                 "bbox": bbox
             }
+        elif method == "validate_dataset":
+            df = read_dataset(params["file_path"], params.get("sheet_name"))
+            report = validator.validate(df, params["schema_name"], params["applied_mappings"])
+            result = {"report": report}
         else:
             raise ValueError(f"Unknown method: {method}")
 

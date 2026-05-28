@@ -77,4 +77,28 @@ export const getSpatialPreview = async (filePath: string, latCol: string, lonCol
   }
 };
 
+export interface ValidationReportData {
+  valid: boolean;
+  message?: string;
+  errors: {
+    column: string;
+    row: number;
+    value: any;
+    check: string;
+    message: string;
+  }[];
+  row_errors: Record<number, { column: string; message: string }[]>;
+}
+
+export const validateDataset = async (filePath: string, schemaName: string, appliedMappings: Record<string, string>, sheetName?: string): Promise<ValidationReportData> => {
+  try {
+    const result: { report: ValidationReportData } = await invoke("validate_dataset_cmd", { filePath, schemaName, appliedMappings, sheetName });
+    return result.report;
+  } catch (error) {
+    console.error("Failed to validate dataset", error);
+    throw error;
+  }
+};
+
+
 

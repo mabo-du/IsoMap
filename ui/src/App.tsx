@@ -2,10 +2,11 @@ import { useState } from "react";
 import { ImportWizard } from "./components/ImportWizard/ImportWizard";
 import { ColumnMapper } from "./components/ColumnMapper/ColumnMapper";
 import { MapPreview } from "./components/MapPreview/MapPreview";
+import { ValidationReport } from "./components/ValidationReport/ValidationReport";
 import "./App.css";
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'import' | 'map' | 'spatial'>('import');
+  const [activeTab, setActiveTab] = useState<'import' | 'map' | 'spatial' | 'validate'>('import');
 
   return (
     <main className="container">
@@ -27,9 +28,15 @@ function App() {
         </button>
         <button 
           onClick={() => setActiveTab('spatial')}
-          style={{ fontWeight: activeTab === 'spatial' ? 'bold' : 'normal' }}
+          style={{ marginRight: '1rem', fontWeight: activeTab === 'spatial' ? 'bold' : 'normal' }}
         >
           3. Spatial Verification
+        </button>
+        <button 
+          onClick={() => setActiveTab('validate')}
+          style={{ fontWeight: activeTab === 'validate' ? 'bold' : 'normal' }}
+        >
+          4. Validation
         </button>
       </div>
 
@@ -45,6 +52,17 @@ function App() {
           filePath="tests/test_data/legacy_data.csv"
           latCol="lat"
           lonCol="lon"
+        />
+      )}
+      {activeTab === 'validate' && (
+        <ValidationReport
+          filePath="tests/test_data/legacy_data.csv"
+          schemaName="neotoma"
+          appliedMappings={{
+            "SiteName": "site",
+            "Latitude": "lat",
+            "Age": "age"
+          }}
         />
       )}
     </main>
