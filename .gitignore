@@ -1,1 +1,66 @@
-.gitnexus
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Environment
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Virtual Environments
+.virtualenv
+
+# React/Node
+node_modules/
+.npm
+ui/dist/
+ui/node_modules/
+ui/.env.local
+ui/.env.development.local
+ui/.env.test.local
+ui/.env.production.local
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# MacOS
+.DS_Store
+
+# Logs
+*.log
+
+# SQLite databases
+*.sqlite
+*.sqlite3
+*.db
+!data/taxonomy/*.db
+
+# Tauri
+ui/src-tauri/target/
