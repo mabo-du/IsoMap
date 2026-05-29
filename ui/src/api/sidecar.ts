@@ -104,9 +104,10 @@ export const exportDataset = async (
   filePath: string, 
   schemaName: string, 
   appliedMappings: Record<string, string>, 
-  format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json',
+  format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd',
   outputPath: string,
-  sheetName?: string
+  sheetName?: string,
+  datasetName?: string
 ): Promise<string> => {
   try {
     const result: { success: boolean, output_path: string } = await invoke("export_dataset_cmd", { 
@@ -115,7 +116,8 @@ export const exportDataset = async (
       appliedMappings, 
       format, 
       outputPath,
-      sheetName 
+      sheetName,
+      dataset_name: datasetName
     });
     return result.output_path;
   } catch (error) {

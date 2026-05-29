@@ -83,6 +83,9 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
                 exporter.export_geojson(df, out_path, mappings, lat_field="Latitude", lon_field="Longitude")
             elif fmt == "isoarch_json":
                 exporter.export_isoarch_json(df, out_path, mappings)
+            elif fmt == "lipd":
+                dataset_name = params.get("dataset_name", "IsoMap_Export")
+                exporter.export_lipd(df, out_path, mappings, dataset_name)
             else:
                 raise ValueError(f"Unknown format: {fmt}")
                 

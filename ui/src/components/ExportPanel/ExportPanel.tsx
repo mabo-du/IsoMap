@@ -13,8 +13,9 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [datasetName, setDatasetName] = useState("IsoMap_Export");
 
-  const handleExport = async (format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json') => {
+  const handleExport = async (format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd') => {
     try {
       setLoading(true);
       setError(null);
@@ -41,6 +42,10 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
           filters.push({ name: 'JSON', extensions: ['json'] });
           defaultPath += '.json';
           break;
+        case 'lipd':
+          filters.push({ name: 'LiPD Archive', extensions: ['lpd'] });
+          defaultPath = `${datasetName}.lpd`;
+          break;
       }
 
       const outputPath = await save({
@@ -49,7 +54,7 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
       });
 
       if (outputPath) {
-        await exportDataset(filePath, schemaName, appliedMappings, format, outputPath, sheetName);
+        await exportDataset(filePath, schemaName, appliedMappings, format, outputPath, sheetName, datasetName);
         setSuccess(`Successfully exported to: ${outputPath}`);
       }
     } catch (err: any) {
@@ -64,6 +69,16 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
       <h2>Export Dataset</h2>
       <p>Your dataset is fully mapped and validated against the <strong>{schemaName}</strong> schema. You can now export the standardised data.</p>
       
+      <div style={{ marginBottom: '1rem' }}>
+        <label style={{ display: 'block', fontWeight: 'bold', marginBottom: '0.5rem' }}>Dataset Name (for LiPD):</label>
+        <input 
+          type="text" 
+          value={datasetName}
+          onChange={(e) => setDatasetName(e.target.value)}
+          style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+        />
+      </div>
+
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
         <button 
           onClick={() => handleExport('csv')} 
@@ -92,6 +107,13 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
           style={{ padding: '1rem', background: '#673ab7', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
         >
           Export to JSON (IsoArcH API)
+        </button>
+        <button 
+          onClick={() => handleExport('lipd')} 
+          disabled={loading}
+          style={{ padding: '1rem', background: '#e65100', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', gridColumn: 'span 2' }}
+        >
+          Export to LiPD (Linked Paleo Data)
         </button>
       </div>
 
