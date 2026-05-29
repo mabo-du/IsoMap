@@ -21,6 +21,13 @@ validator = ValidationEngine()
 exporter = ExportEngine()
 
 def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
+    if not isinstance(request, dict) or "method" not in request:
+        return {
+            "jsonrpc": "2.0",
+            "error": {"code": -32600, "message": "Invalid Request"},
+            "id": request.get("id") if isinstance(request, dict) else None
+        }
+
     method = request.get("method")
     params = request.get("params", {})
     request_id = request.get("id")

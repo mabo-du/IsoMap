@@ -100,69 +100,34 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '2rem' }}>
-        <button 
-          onClick={() => handleExport('csv')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#0066cc', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Export to CSV
-        </button>
-        <button 
-          onClick={() => handleExport('xlsx')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#207245', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Export to Excel
-        </button>
-        <button 
-          onClick={() => handleExport('geojson')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#455a64', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Export to GeoJSON (Neotoma Format)
-        </button>
-        <button 
-          onClick={() => handleExport('isoarch_json')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#673ab7', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Export to JSON (IsoArcH API)
-        </button>
-        <button 
-          onClick={() => handleExport('lipd')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#e65100', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', gridColumn: 'span 2' }}
-        >
-          Export to LiPD (Linked Paleo Data)
-        </button>
-        <button 
-          onClick={() => handleExport('pangaea')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#0288d1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Export for PANGAEA Submission
-        </button>
-        <button 
-          onClick={() => handleExport('noaa')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#00796b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Export for NOAA NCEI Submission
-        </button>
-        <button 
-          onClick={() => handleExport('rocrate')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#4a148c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Export to Semantic Web RO-Crate
-        </button>
-        <button 
-          onClick={() => handleExport('datapaper')} 
-          disabled={loading}
-          style={{ padding: '1rem', background: '#bf360c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
-        >
-          Generate LaTeX Data Paper (ESSD)
-        </button>
+        {[
+          { format: 'csv', label: 'Export to CSV', bg: '#0066cc', span: 1 },
+          { format: 'xlsx', label: 'Export to Excel', bg: '#207245', span: 1 },
+          { format: 'geojson', label: 'Export to GeoJSON (Neotoma Format)', bg: '#455a64', span: 1 },
+          { format: 'isoarch_json', label: 'Export to JSON (IsoArcH API)', bg: '#673ab7', span: 1 },
+          { format: 'lipd', label: 'Export to LiPD (Linked Paleo Data)', bg: '#e65100', span: 2 },
+          { format: 'pangaea', label: 'Export for PANGAEA Submission', bg: '#0288d1', span: 1 },
+          { format: 'noaa', label: 'Export for NOAA NCEI Submission', bg: '#00796b', span: 1 },
+          { format: 'rocrate', label: 'Export to Semantic Web RO-Crate', bg: '#4a148c', span: 1 },
+          { format: 'datapaper', label: 'Generate LaTeX Data Paper (ESSD)', bg: '#bf360c', span: 1 }
+        ].map(btn => (
+          <button 
+            key={btn.format}
+            onClick={() => handleExport(btn.format as any)} 
+            disabled={loading}
+            style={{ 
+              padding: '1rem', 
+              background: btn.bg, 
+              color: 'white', 
+              border: 'none', 
+              borderRadius: '4px', 
+              cursor: 'pointer',
+              gridColumn: btn.span === 2 ? 'span 2' : undefined
+            }}
+          >
+            {btn.label}
+          </button>
+        ))}
       </div>
 
       {loading && <div style={{ marginTop: '1rem', color: '#666' }}>Processing export...</div>}

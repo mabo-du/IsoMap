@@ -5,6 +5,7 @@ import { MapPreview } from "./components/MapPreview/MapPreview";
 import { ChronologyReview } from "./components/ChronologyReview/ChronologyReview";
 import { ValidationReport } from "./components/ValidationReport/ValidationReport";
 import { ExportPanel } from "./components/ExportPanel/ExportPanel";
+import { ErrorBoundary } from "./components/ErrorBoundary";
 import "./App.css";
 
 function App() {
@@ -54,52 +55,54 @@ function App() {
         </button>
       </div>
 
-      {activeTab === 'import' && <ImportWizard />}
-      {activeTab === 'map' && (
-        <ColumnMapper 
-          filePath="tests/test_data/legacy_data.csv" 
-          schemaName="neotoma" 
-        />
-      )}
-      {activeTab === 'chronology' && (
-        <ChronologyReview
-          filePath="tests/test_data/legacy_data.csv"
-          mappings={{
-            "Age": ["age", "14C_BP"]
-          }}
-        />
-      )}
-      {activeTab === 'spatial' && (
-        <MapPreview
-          filePath="tests/test_data/legacy_data.csv"
-          latCol="lat"
-          lonCol="lon"
-        />
-      )}
-      {activeTab === 'validate' && (
-        <ValidationReport
-          filePath="tests/test_data/legacy_data.csv"
-          schemaName="neotoma"
-          appliedMappings={{
-            "SiteName": "site",
-            "Latitude": "lat",
-            "Longitude": "lon",
-            "Age": "age"
-          }}
-        />
-      )}
-      {activeTab === 'export' && (
-        <ExportPanel
-          filePath="tests/test_data/legacy_data.csv"
-          schemaName="neotoma"
-          appliedMappings={{
-            "SiteName": "site",
-            "Latitude": "lat",
-            "Longitude": "lon",
-            "Age": "age"
-          }}
-        />
-      )}
+      <ErrorBoundary key={activeTab}>
+        {activeTab === 'import' && <ImportWizard />}
+        {activeTab === 'map' && (
+          <ColumnMapper 
+            filePath="tests/test_data/legacy_data.csv" 
+            schemaName="neotoma" 
+          />
+        )}
+        {activeTab === 'chronology' && (
+          <ChronologyReview
+            filePath="tests/test_data/legacy_data.csv"
+            mappings={{
+              "Age": ["age", "14C_BP"]
+            }}
+          />
+        )}
+        {activeTab === 'spatial' && (
+          <MapPreview
+            filePath="tests/test_data/legacy_data.csv"
+            latCol="lat"
+            lonCol="lon"
+          />
+        )}
+        {activeTab === 'validate' && (
+          <ValidationReport
+            filePath="tests/test_data/legacy_data.csv"
+            schemaName="neotoma"
+            appliedMappings={{
+              "SiteName": "site",
+              "Latitude": "lat",
+              "Longitude": "lon",
+              "Age": "age"
+            }}
+          />
+        )}
+        {activeTab === 'export' && (
+          <ExportPanel
+            filePath="tests/test_data/legacy_data.csv"
+            schemaName="neotoma"
+            appliedMappings={{
+              "SiteName": "site",
+              "Latitude": "lat",
+              "Longitude": "lon",
+              "Age": "age"
+            }}
+          />
+        )}
+      </ErrorBoundary>
     </main>
   );
 }
