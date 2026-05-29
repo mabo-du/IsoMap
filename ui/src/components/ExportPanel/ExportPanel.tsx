@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { save } from '@tauri-apps/plugin-dialog';
-import { exportDataset } from '../../api/sidecar';
+import { exportDataset, generateDataPaper } from '../../api/sidecar';
 
 interface ExportPanelProps {
   filePath: string;
@@ -15,7 +15,7 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
   const [success, setSuccess] = useState<string | null>(null);
   const [datasetName, setDatasetName] = useState("IsoMap_Export");
 
-  const handleExport = async (format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd' | 'pangaea' | 'noaa') => {
+  const handleExport = async (format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd' | 'pangaea' | 'noaa' | 'rocrate' | 'datapaper') => {
     try {
       setLoading(true);
       setError(null);
@@ -54,6 +54,14 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
           filters.push({ name: 'NOAA NCEI Submission (Excel)', extensions: ['xlsx'] });
           defaultPath += '_noaa.xlsx';
           break;
+        case 'rocrate':
+          filters.push({ name: 'Semantic Web RO-Crate (ZIP)', extensions: ['zip'] });
+          defaultPath += '_rocrate.zip';
+          break;
+        case 'datapaper':
+          filters.push({ name: 'ESSD LaTeX Data Paper', extensions: ['tex'] });
+          defaultPath = 'manuscript.tex';
+          break;
       }
 
       const outputPath = await save({
@@ -62,7 +70,11 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
       });
 
       if (outputPath) {
-        await exportDataset(filePath, schemaName, appliedMappings, format, outputPath, sheetName, datasetName);
+        if (format === 'datapaper') {
+          await generateDataPaper(filePath, schemaName, outputPath, sheetName);
+        } else {
+          await exportDataset(filePath, schemaName, appliedMappings, format as any, outputPath, sheetName, datasetName);
+        }
         setSuccess(`Successfully exported to: ${outputPath}`);
       }
     } catch (err: any) {
@@ -136,6 +148,20 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
           style={{ padding: '1rem', background: '#00796b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
         >
           Export for NOAA NCEI Submission
+        </button>
+        <button 
+          onClick={() => handleExport('rocrate')} 
+          disabled={loading}
+          style={{ padding: '1rem', background: '#4a148c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Export to Semantic Web RO-Crate
+        </button>
+        <button 
+          onClick={() => handleExport('datapaper')} 
+          disabled={loading}
+          style={{ padding: '1rem', background: '#bf360c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Generate LaTeX Data Paper (ESSD)
         </button>
       </div>
 

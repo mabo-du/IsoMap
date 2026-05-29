@@ -104,7 +104,7 @@ export const exportDataset = async (
   filePath: string, 
   schemaName: string, 
   appliedMappings: Record<string, string>, 
-  format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd' | 'pangaea' | 'noaa',
+  format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd' | 'pangaea' | 'noaa' | 'rocrate',
   outputPath: string,
   sheetName?: string,
   datasetName?: string
@@ -140,6 +140,26 @@ export const normaliseChronology = async (
     return result.preview;
   } catch (error) {
     console.error("Failed to normalise chronology", error);
+    throw error;
+  }
+};
+
+export const generateDataPaper = async (
+  filePath: string,
+  schemaName: string,
+  outputPath: string,
+  sheetName?: string
+): Promise<string> => {
+  try {
+    const result: { success: boolean, output_path: string } = await invoke("generate_data_paper_cmd", {
+      filePath,
+      schemaName,
+      outputPath,
+      sheetName
+    });
+    return result.output_path;
+  } catch (error) {
+    console.error("Failed to generate data paper", error);
     throw error;
   }
 };

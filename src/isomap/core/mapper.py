@@ -12,6 +12,7 @@ from typing import List, Dict, Any, Optional
 from isomap.matching.exact import exact_match, normalize_string
 from isomap.matching.fuzzy import fuzzy_match
 from isomap.matching.semantic import SemanticMatcher
+from isomap.matching.valentine_matcher import ValentineMatcher
 from isomap.matching.preferences import PreferenceCache
 from isomap.matching.distribution import infer_column_types
 
@@ -19,6 +20,7 @@ class ColumnMapper:
     def __init__(self, db_path: str = "data/preferences.db", schema_dir: str = "data/schemas"):
         self.pref_cache = PreferenceCache(db_path)
         self.semantic_matcher = SemanticMatcher()
+        self.valentine_matcher = ValentineMatcher()
         self.schema_dir = Path(schema_dir)
         
     def _load_schema_fields(self, schema_name: str) -> List[str]:
@@ -81,7 +83,15 @@ class ColumnMapper:
             if target not in candidates or candidates[target]["confidence"] < score:
                 candidates[target] = {"target": target, "confidence": score, "method": "semantic"}
                 
-        # 5. Value Distribution Profiling (heuristic-based overrides based on inferred type)
+        # 5. Valentine Ensemble Match
+        val_matches = self.valentine_matcher.match(col, series, targets)
+        for match in val_matches:
+            target = match["target"]
+            score = match["confidence"] * 0.85
+            if target not in candidates or candidates[target]["confidence"] < score:
+                candidates[target] = {"target": target, "confidence": score, "method": "valentine"}
+                
+        # 6. Value Distribution Profiling (heuristic-based overrides based on inferred type)
         dist_suggestions = self._map_inferred_to_target(inferred, targets)
         for target, score in dist_suggestions.items():
             if target not in candidates or candidates[target]["confidence"] < score:

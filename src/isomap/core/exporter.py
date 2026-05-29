@@ -187,4 +187,65 @@ class ExportEngine:
             
         return output_path
 
+    def export_rocrate(self, df: pd.DataFrame, output_path: str, applied_mappings: Dict[str, str]):
+        """
+        Exports to a Semantic Web RO-Crate containing the dataset and Frictionless datapackage.json.
+        """
+        from rocrate.rocrate import ROCrate
+        import tempfile
+        import shutil
+        import os
+        from pathlib import Path
 
+        mapped_df = self._prepare_mapped_dataframe(df, applied_mappings)
+        
+        with tempfile.TemporaryDirectory() as temp_dir:
+            temp_path = Path(temp_dir)
+            
+            # Write CSV
+            csv_filename = "dataset.csv"
+            csv_path = temp_path / csv_filename
+            mapped_df.to_csv(csv_path, index=False)
+            
+            # Write Frictionless datapackage.json
+            datapackage = {
+                "profile": "tabular-data-package",
+                "resources": [
+                    {
+                        "name": "dataset",
+                        "path": csv_filename,
+                        "profile": "tabular-data-resource",
+                        "schema": {
+                            "fields": [{"name": col, "type": "string"} for col in mapped_df.columns]
+                        }
+                    }
+                ]
+            }
+            with open(temp_path / "datapackage.json", "w") as f:
+                json.dump(datapackage, f, indent=2)
+                
+            # Build RO-Crate
+            crate = ROCrate()
+            
+            # Add Dataset
+            dataset_file = crate.add_file(str(csv_path), dest_path=csv_filename)
+            dataset_file["encodingFormat"] = "text/csv"
+            
+            # Add datapackage.json
+            dp_file = crate.add_file(str(temp_path / "datapackage.json"), dest_path="datapackage.json")
+            dp_file["encodingFormat"] = "application/json"
+            dp_file["about"] = {"@id": dataset_file.id}
+            
+            # Write RO-Crate
+            crate_dir = temp_path / "rocrate"
+            crate.write(str(crate_dir))
+            
+            # Zip it up
+            import zipfile
+            with zipfile.ZipFile(output_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for root, dirs, files in os.walk(crate_dir):
+                    for file in files:
+                        file_path = os.path.join(root, file)
+                        zipf.write(file_path, os.path.relpath(file_path, crate_dir))
+                        
+        return output_path

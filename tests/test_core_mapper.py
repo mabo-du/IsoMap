@@ -85,3 +85,13 @@ def test_column_mapper(tmp_path):
     d13c_suggestions = results2["d13c_value"]
     
     assert any(s["target"] == "Value" and s["method"] == "preference" for s in d13c_suggestions)
+
+def test_valentine_match():
+    from isomap.matching.valentine_matcher import ValentineMatcher
+    matcher = ValentineMatcher()
+    targets = ["Latitude", "Longitude", "TaxonName", "Value"]
+    series = pd.Series(["45.0", "46.1", "44.9"])
+    matches = matcher.match("lat", series, targets)
+    assert len(matches) > 0
+    # Cupid / Coma Name matchers often match 'lat' and 'Latitude' 
+    assert any(m["target"] == "Latitude" for m in matches)

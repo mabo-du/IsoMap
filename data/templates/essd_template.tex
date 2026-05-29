@@ -1,0 +1,27 @@
+\documentclass[essd, manuscript]{copernicus}
+\begin{document}
+
+\title{ {{ dataset_name|default('Dataset') }} : A Harmonised Geochemical Dataset }
+\author[1]{ {{ author_name|default('Author Name') }} }
+\affil[1]{ {{ author_affiliation|default('Author Affiliation') }} }
+
+\maketitle
+
+\begin{abstract}
+This paper presents a harmonised dataset consisting of {{ num_records|default(0) }} records, focusing on isotopic and paleoecological measurements. The data is spatially bound between latitudes {{ min_lat|default(0.0) }} to {{ max_lat|default(0.0) }} and longitudes {{ min_lon|default(0.0) }} to {{ max_lon|default(0.0) }}. The standardisation process was conducted using IsoMap v3.0, ensuring strict structural fidelity.
+\end{abstract}
+
+\section{Introduction}
+Geochemical proxies are vital for reconstructing paleoenvironmental conditions. This dataset compiles disparate isotopic records into a unified structure aligned with the {{ schema_name|default('standard') }} schema.
+
+\section{Data Description}
+The dataset is provided in a Frictionless Tabular Data Package format embedded within a Semantic Web RO-Crate.
+Validation of the final dataset yielded an automated confidence score of {{ validation_score|default(100.0) }}\%.
+
+\section{Methodology}
+To harmonise the data, source columns were automatically aligned to the {{ schema_name|default('standard') }} schema using IsoMap's 6-stage fallback pipeline. This pipeline encompasses exact string matching, fuzzy heuristics, SciBERT semantic embeddings, and Valentine ensemble structural matching.
+
+\section{Data Availability}
+The dataset and its RO-Crate metadata are publicly available at \url{ {{ dataset_url|default('https://doi.org/10.xxxx/xxxxx') }} }.
+
+\end{document}

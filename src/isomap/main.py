@@ -90,9 +90,17 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
                 exporter.export_pangaea(df, out_path, mappings)
             elif fmt == "noaa":
                 exporter.export_noaa(df, out_path, mappings)
+            elif fmt == "rocrate":
+                exporter.export_rocrate(df, out_path, mappings)
             else:
                 raise ValueError(f"Unknown format: {fmt}")
                 
+            result = {"success": True, "output_path": out_path}
+        elif method == "generate_data_paper":
+            from isomap.core.datapaper import generate_data_paper
+            df = read_dataset(params["file_path"], params.get("sheet_name"))
+            out_path = params["output_path"]
+            generate_data_paper(df, params["schema_name"], output_path=out_path)
             result = {"success": True, "output_path": out_path}
         elif method == "normalise_chronology":
             df = read_dataset(params["file_path"], params.get("sheet_name"))
