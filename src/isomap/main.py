@@ -86,6 +86,10 @@ def handle_request(request: Dict[str, Any]) -> Dict[str, Any]:
             elif fmt == "lipd":
                 dataset_name = params.get("dataset_name", "IsoMap_Export")
                 exporter.export_lipd(df, out_path, mappings, dataset_name)
+            elif fmt == "pangaea":
+                exporter.export_pangaea(df, out_path, mappings)
+            elif fmt == "noaa":
+                exporter.export_noaa(df, out_path, mappings)
             else:
                 raise ValueError(f"Unknown format: {fmt}")
                 

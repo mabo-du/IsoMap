@@ -104,7 +104,7 @@ export const exportDataset = async (
   filePath: string, 
   schemaName: string, 
   appliedMappings: Record<string, string>, 
-  format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd',
+  format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd' | 'pangaea' | 'noaa',
   outputPath: string,
   sheetName?: string,
   datasetName?: string

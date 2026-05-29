@@ -15,7 +15,7 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
   const [success, setSuccess] = useState<string | null>(null);
   const [datasetName, setDatasetName] = useState("IsoMap_Export");
 
-  const handleExport = async (format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd') => {
+  const handleExport = async (format: 'csv' | 'xlsx' | 'geojson' | 'isoarch_json' | 'lipd' | 'pangaea' | 'noaa') => {
     try {
       setLoading(true);
       setError(null);
@@ -45,6 +45,14 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
         case 'lipd':
           filters.push({ name: 'LiPD Archive', extensions: ['lpd'] });
           defaultPath = `${datasetName}.lpd`;
+          break;
+        case 'pangaea':
+          filters.push({ name: 'PANGAEA Submission (TXT)', extensions: ['txt'] });
+          defaultPath += '.txt';
+          break;
+        case 'noaa':
+          filters.push({ name: 'NOAA NCEI Submission (Excel)', extensions: ['xlsx'] });
+          defaultPath += '_noaa.xlsx';
           break;
       }
 
@@ -114,6 +122,20 @@ export const ExportPanel = ({ filePath, schemaName, appliedMappings, sheetName }
           style={{ padding: '1rem', background: '#e65100', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', gridColumn: 'span 2' }}
         >
           Export to LiPD (Linked Paleo Data)
+        </button>
+        <button 
+          onClick={() => handleExport('pangaea')} 
+          disabled={loading}
+          style={{ padding: '1rem', background: '#0288d1', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Export for PANGAEA Submission
+        </button>
+        <button 
+          onClick={() => handleExport('noaa')} 
+          disabled={loading}
+          style={{ padding: '1rem', background: '#00796b', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+        >
+          Export for NOAA NCEI Submission
         </button>
       </div>
 

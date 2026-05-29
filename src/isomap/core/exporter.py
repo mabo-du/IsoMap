@@ -138,3 +138,53 @@ class ExportEngine:
                         
         return output_path
 
+    def export_pangaea(self, df: pd.DataFrame, output_path: str, applied_mappings: Dict[str, str]):
+        """
+        Exports data into a tab-delimited text file compliant with the PANGAEA format.
+        Includes a boilerplate metadata header block.
+        """
+        mapped_df = self._prepare_mapped_dataframe(df, applied_mappings)
+        
+        metadata_header = (
+            "/* PANGAEA Data Submission */\n"
+            "CITATION: [INSERT_CITATION]\n"
+            "REFERENCE: [INSERT_REFERENCE]\n"
+            "PROJECT: [INSERT_PROJECT]\n"
+            "PI_NAME: [INSERT_PI_NAME]\n"
+            "METHOD: [INSERT_METHOD]\n"
+            "/* Data */\n"
+        )
+        
+        # Write header then data
+        with open(output_path, 'w') as f:
+            f.write(metadata_header)
+            
+        # Append dataframe as tab-delimited
+        mapped_df.to_csv(output_path, sep='\t', index=False, mode='a')
+        
+        return output_path
+
+    def export_noaa(self, df: pd.DataFrame, output_path: str, applied_mappings: Dict[str, str]):
+        """
+        Exports data into an Excel workbook compliant with the NOAA NCEI Paleoclimatology template.
+        Generates a 'Metadata' sheet and a 'Data' sheet.
+        """
+        mapped_df = self._prepare_mapped_dataframe(df, applied_mappings)
+        
+        # Create a blank metadata stub
+        metadata_df = pd.DataFrame([
+            ["Investigator", "[INSERT_INVESTIGATOR]"],
+            ["Study Name", "[INSERT_STUDY_NAME]"],
+            ["Site Name", "[INSERT_SITE_NAME]"],
+            ["Location", "[INSERT_LOCATION_COORDINATES]"],
+            ["Publication", "[INSERT_PUBLICATION]"],
+            ["Description", "[INSERT_DESCRIPTION]"]
+        ], columns=["Field", "Value"])
+        
+        with pd.ExcelWriter(output_path, engine='xlsxwriter') as writer:
+            metadata_df.to_excel(writer, sheet_name='Metadata', index=False)
+            mapped_df.to_excel(writer, sheet_name='Data', index=False)
+            
+        return output_path
+
+
